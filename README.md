@@ -1,14 +1,10 @@
 # Project_3
 
-[ez_tracker live]: https://enigmatic-eyrie-64011.herokuapp.com
-
-# [EZ-Tracker][ez_tracker live]
+# [PMT]
 
 ## Description
 
-- EzTracker is the newest subscription tracking app that lets user manually input their subscriptions--including balance and expiration date--and it has charts to compare their subscriptions based on ratings.
-- It will alert user by sending you a notification when their subscription is about to expire
-
+- DEFAULT
 ## 👤 Authors:
 
 - Tony Crosby - [GitHub](github.com/tonycrosby-tech) - ![License](https://img.shields.io/badge/License-MIT-yellow)
@@ -27,17 +23,7 @@
 ## User Story
 
 ```
-AS A user
-WHEN user enters a email and password.
-THEN they can log in
-WHEN the user clicks on Profile
-THEN they can see their favorite subscriptions graphically
-WHEN the user enters a new subscription
-THEN it gets saved to the database and shows on subscription page
-WHEN the user deletes a subscription
-THEN it gets removed from the list and the charts
-WHEN  subscription is about to expire
-Then it will send notification to user email
+WIP
 
 ```
 
@@ -46,33 +32,18 @@ Then it will send notification to user email
 To install necessary dependencies, run the following command.
 
 ```bash
-npm start
+yarn install
 ```
 
 ## Usage
 
-- this screenshot is about page of EZ-Tracker
-![about](./client/src/assets/images/about.PNG)
-
-- this screenshot is login page of EZ-Tracker
-![login](./client/src/assets/images/signin.PNG)
-
-- this screenshot is homescreen page of EZ-Tracker
-![home](./client/src/assets/images/home.PNG)
-
-- this screenshot is Subscription page of EZ-Tracker
-![Subscription](./client/src/assets/images/subscriptions.PNG)
-
-- this screenshot is profile page of EZ-Tracker,where user see chart
-![profile](./client/src/assets/images/profile.PNG)
+- WIP
 
 ## Deployed Website
-
-- [EZ-Tracker Deployed link](https://enigmatic-eyrie-65011.herokuapp.com)
-
+- n/a
 ## Repository
 
-- [EZ-Tracker Repository](https://github.com/tonycrosby-tech/EZ_Tracker.git)
+- n/a
 
 ## Future Development
 
@@ -92,11 +63,6 @@ npm start
 
 - <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="50" height="50"/>
 
-- </a> -<a href="https://reactjs.org/" target="_blank">
-  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" width="50" height="50"/> </a>
-
-- <a href="https://material-ui.com/" target="_blank"> <img src="https://material-ui.com/static/logo_raw.svg" alt="material ui" width="50" height="50"/> </a>
-
 - <a href="https://reactjs.org/" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" alt="react" width="50" height="50"/> </a>
 
 - <a href="https://heroku.com" target="_blank"> <img src="https://www.vectorlogo.zone/logos/heroku/heroku-icon.svg" alt="heroku" width="50" height="50"/> </a>
@@ -110,15 +76,8 @@ npm start
 
 - Mongoose
 
-- react-player
-
-- React-Chart-2
-
 ## Questions
 
 - If you have any questions about the repo, please open an issue or contact us directly or you can check out more of our work at:
 
   - [Tony Crosby](https://github.com/tonycrosby-tech)
-  - [Parth Patel](https://github.com/parth167)
-  - [Logan Pippin](https://github.com/LoganPippin)
-  - [Mario Thompson](https://github.com/MarioThompson0010)
