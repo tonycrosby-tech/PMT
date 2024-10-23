@@ -11,11 +11,7 @@
 
 ## 👤 Authors:
 
-- Tony & Parth - front end,
-- Mario - backend
-- Logan - little backend, Nodemailer & Charts.
-
-- ![License](https://img.shields.io/badge/License-MIT-yellow)
+- Tony Crosby - [GitHub](github.com/tonycrosby-tech) - ![License](https://img.shields.io/badge/License-MIT-yellow)
 
 ## 📜 Table of Contents:
 
