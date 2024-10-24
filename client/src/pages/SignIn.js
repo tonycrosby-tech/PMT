@@ -17,11 +17,11 @@ const Login = () => {
     }
   };
 
-  const onSubmit = async (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('/api/auth/login', {
+      const response = axios.post('/api/auth/login', {
         username,
         password,
       });

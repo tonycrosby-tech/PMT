@@ -67,9 +67,6 @@ yarn install
 
 - <a href="https://www.mongodb.com/" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mongodb/mongodb-original-wordmark.svg" alt="mongodb" width="50" height="50"/> </a>
 
-- <a href="https://www.chartjs.org" target="_blank"> 
-  <img src="https://www.chartjs.org/media/logo-title.svg" width="50" height="50"/> </a>
-
 - Mongoose
 
 ## Questions

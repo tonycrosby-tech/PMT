@@ -721,16 +721,18 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FaHome, FaTasks, FaUserCircle, FaCalendarAlt, FaChartPie } from 'react-icons/fa';
+import { FaHome, FaTasks, FaUserCircle, FaCalendarAlt, FaChartPie, FaPortrait } from 'react-icons/fa';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 const Project = () => {
   const [open, setOpen] = useState(false);
   const [projects, setProjects] = useState([]);
   const [projectDetails, setProjectDetails] = useState({
     id: '',
-    name: '',
+    title: '',
     description: '',
+    status: 'active',
     startDate: '',
     expirationDate: '',
   });
@@ -742,8 +744,10 @@ const Project = () => {
     projectId: '',
   });
   const [ownerId, setOwnerId] = useState('');
+  const history = useHistory();
 
   useEffect(() => {
+
     loadProjects();
     fetchOwnerId();
   }, []);
@@ -761,6 +765,7 @@ const Project = () => {
     try {
       const response = await axios.get('/api/auth/getAllprojectsandtasks');
       setProjects(response.data);
+      console.log('Fetched Projects:', response.data); // Check the output
     } catch (err) {
       console.error('Error loading projects:', err);
     }
@@ -817,29 +822,40 @@ const Project = () => {
     }
   };
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => {
-    setOpen(false);
-    resetProjectFields();
+  const handleOpen = async () => await setOpen(true);
+  const handleClose = async () => {
+    await setOpen(false);
+    await resetProjectFields();
   };
 
-  const resetProjectFields = () => {
-    setProjectDetails({
+  const resetProjectFields = async () => {
+    await setProjectDetails({
       id: '',
-      name: '',
+      title: '',
       description: '',
+      status: 'active',
       startDate: '',
       expirationDate: '',
     });
   };
 
-  const resetTaskFields = () => {
-    setTaskDetails({
+  const resetTaskFields = async () => {
+    await setTaskDetails({
       title: '',
       description: '',
       status: 'To Do',
       projectId: '',
     });
+  };
+
+  const logOut = () => {
+    try {
+       axios.get('/api/auth/logout'); // Call the logout endpoint
+      localStorage.removeItem('token'); // Remove the token from local storage
+      history.push('/login'); // Redirect to the login page after logout
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
 
   return (
@@ -855,471 +871,332 @@ const Project = () => {
         </div>
       </nav> */}
 
-      <div className="flex h-screen">
+      <div className="flex flex-col md:flex-row min-h-screen">
         {/* Sidebar */}
-        <aside className="w-64 bg-gray-800 text-white flex flex-col">
-          <div className="p-4">
-            <h2 className="text-2xl font-bold mb-6">Project Dashboard</h2>
+        <aside className="w-full md:w-64 bg-gray-800 text-white">
+          <div className="p-6 flex flex-col items-center">
+            <h2 className="text-3xl font-bold mb-8">PMT</h2>
             <nav>
-              <ul className="space-y-4">
+              <ul className="space-y-6">
                 <li>
                   <a
                     href="#"
-                    className="flex items-center p-2 hover:bg-gray-700 rounded"
+                    className="flex items-center p-3 hover:bg-gray-700 rounded transition duration-300"
                   >
-                    <FaHome className="mr-2" /> Dashboard
+                    <FaHome className="mr-3" /> Dashboard
                   </a>
                 </li>
                 <li>
                   <a
                     href="#"
-                    className="flex items-center p-2 hover:bg-gray-700 rounded"
+                    className="flex items-center p-3 hover:bg-gray-700 rounded transition duration-300"
                   >
-                    <FaTasks className="mr-2" /> Tasks
+                    <FaTasks className="mr-3" /> Tasks
                   </a>
                 </li>
                 <li>
                   <a
                     href="#"
-                    className="flex items-center p-2 hover:bg-gray-700 rounded"
+                    className="flex items-center p-3 hover:bg-gray-700 rounded transition duration-300"
                   >
-                    <FaCalendarAlt className="mr-2" /> Milestones
+                    <FaPortrait className="mr-3" /> Projects
                   </a>
                 </li>
                 <li>
                   <a
                     href="#"
-                    className="flex items-center p-2 hover:bg-gray-700 rounded"
+                    className="flex items-center p-3 hover:bg-gray-700 rounded transition duration-300"
                   >
-                    <FaChartPie className="mr-2" /> Reports
+                    <FaChartPie className="mr-3" /> Reports
                   </a>
                 </li>
               </ul>
+              <button
+                onClick={logOut}
+                className="mt-6 w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded transition duration-300"
+              >
+                Log Out
+              </button>
             </nav>
           </div>
         </aside>
 
-        {/* Main content */}
+        {/* Main Content */}
         <main className="flex-1 p-6 bg-gray-100">
-          <h1 className="text-3xl font-bold mb-6">Weekly Status Report</h1>
-
-          {/* Grid for main dashboard content */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Project Status Card */}
-            <div className="bg-white p-4 rounded shadow">
-              <h2 className="text-xl font-semibold mb-4">Project Status</h2>
-              <table className="w-full">
-                <thead>
-                  <tr>
-                    <th className="text-left">Project</th>
-                    <th>Schedule</th>
-                    <th>Budget</th>
-                    <th>Team</th>
-                    <th>Issue</th>
-                    <th>Risk</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Basic Project</td>
-                    <td className="text-red-500">Red</td>
-                    <td className="text-green-500">Green</td>
-                    <td className="text-yellow-500">Yellow</td>
-                    <td className="text-green-500">Green</td>
-                    <td className="text-red-500">Red</td>
-                  </tr>
-                  {/* Add more rows as needed */}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Issues By Priority Card */}
-            <div className="bg-white p-4 rounded shadow">
-              <h2 className="text-xl font-semibold mb-4">Issues By Priority</h2>
-              <div className="w-32 h-32 mx-auto">
-                {/* Placeholder for a chart */}
-                <FaChartPie className="text-gray-400 w-full h-full" />
-              </div>
-            </div>
-
-            {/* Milestones Achieved */}
-            <div className="bg-white p-4 rounded shadow">
-              <h2 className="text-xl font-semibold mb-4">
-                Milestones Achieved
-              </h2>
-              <ul className="space-y-2">
-                <li>Milestone 1</li>
-                <li>Milestone 2</li>
-                <li>Milestone 3</li>
-                {/* Add more milestones */}
-              </ul>
-            </div>
-          </div>
-
-          {/* Upcoming Key Activities */}
-          <div className="mt-6 bg-white p-4 rounded shadow">
-            <h2 className="text-xl font-semibold mb-4">
-              Upcoming Key Activities
-            </h2>
-            <table className="w-full">
-              <thead>
-                <tr>
-                  <th className="text-left">Name</th>
-                  <th>Planned Start</th>
-                  <th>Planned Finish</th>
-                  <th>Resources</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Draft Design Concepts</td>
-                  <td>08-Jan-2024</td>
-                  <td>14-Jan-2024</td>
-                  <td>Adrian</td>
-                </tr>
-                {/* Add more rows as needed */}
-              </tbody>
-            </table>
-          </div>
-          <div className="container mx-auto p-6">
-  {/* Kanban Board */}
-  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-    {/* To Do Column */}
-    <div className="bg-gray-800 p-4 rounded-lg">
-      <h2 className="text-xl font-bold text-white mb-4">To Do</h2>
-      <div className="space-y-4">
-        {projects
-          .filter((proj) => proj.status === 'To Do')
-          .map((proj) => (
-            <div
-              key={proj._id}
-              className="bg-gray-700 text-white rounded-lg shadow p-4"
+          <h1 className="text-3xl font-bold mb-6">Project Dashboard</h1>
+          <div
+            id="tasks"
+            className="w-full my-auto shadow-xl mx-auto p-8 bg-white rounded-lg"
+          >
+            <button
+              onClick={handleOpen}
+              className="mb-6 bg-gray-800 hover:bg-gray-900 text-white px-6 py-3 rounded-lg transition duration-300"
             >
-              <h3 className="text-lg font-semibold">{proj.title}</h3>
-              <p className="text-gray-300">{proj.description}</p>
-              <p className="text-sm text-gray-400">
-                Start: {new Date(proj.startDate).toLocaleDateString()}
-              </p>
-              <p className="text-sm text-gray-400">
-                Due: {new Date(proj.expirationDate).toLocaleDateString()}
-              </p>
-            </div>
-          ))}
-      </div>
-    </div>
+              Add a New Project
+            </button>
 
-    {/* In Progress Column */}
-    <div className="bg-gray-800 p-4 rounded-lg">
-      <h2 className="text-xl font-bold text-white mb-4">In Progress</h2>
-      <div className="space-y-4">
-        {projects
-          .filter((proj) => proj.status === 'In Progress')
-          .map((proj) => (
-            <div
-              key={proj._id}
-              className="bg-gray-700 text-white rounded-lg shadow p-4"
-            >
-              <h3 className="text-lg font-semibold">{proj.title}</h3>
-              <p className="text-gray-300">{proj.description}</p>
-              <p className="text-sm text-gray-400">
-                Start: {new Date(proj.startDate).toLocaleDateString()}
-              </p>
-              <p className="text-sm text-gray-400">
-                Due: {new Date(proj.expirationDate).toLocaleDateString()}
-              </p>
-            </div>
-          ))}
-      </div>
-    </div>
+            {/* Kanban Board */}
+            <div className="container">
+              <div className="flex flex-wrap -mx-2">
+                {projects.map((proj) => (
+                  <div
+                    key={proj._id}
+                    className="bg-white rounded-lg shadow-lg p-6 m-2 w-full md:w-1/2 lg:w-1/3"
+                  >
+                    <h2 className="text-xl font-bold mb-4 text-center text-gray-800">
+                      {proj.status.toUpperCase()}
+                    </h2>
+                    <div className="bg-slate-50 p-4 rounded shadow">
+                      <h3 className="text-lg font-semibold mb-2">
+                        {proj.title}
+                      </h3>
+                      <p className="text-gray-600 mb-2">{proj.description}</p>
+                      <p className="text-gray-700 mb-2">
+                        Start Date:{' '}
+                        {new Date(proj.dateCreated).toLocaleDateString()}
+                      </p>
+                      <p className="text-gray-700 mb-2">
+                        Last Updated:{' '}
+                        {new Date(proj.lastUpdated).toLocaleDateString()}
+                      </p>
+                    </div>
 
-    {/* In Review Column */}
-    <div className="bg-gray-800 p-4 rounded-lg">
-      <h2 className="text-xl font-bold text-white mb-4">In Review</h2>
-      <div className="space-y-4">
-        {projects
-          .filter((proj) => proj.status === 'In Review')
-          .map((proj) => (
-            <div
-              key={proj._id}
-              className="bg-gray-700 text-white rounded-lg shadow p-4"
-            >
-              <h3 className="text-lg font-semibold">{proj.title}</h3>
-              <p className="text-gray-300">{proj.description}</p>
-              <p className="text-sm text-gray-400">
-                Start: {new Date(proj.startDate).toLocaleDateString()}
-              </p>
-              <p className="text-sm text-gray-400">
-                Due: {new Date(proj.expirationDate).toLocaleDateString()}
-              </p>
-            </div>
-          ))}
-      </div>
-    </div>
-
-    {/* Done Column */}
-    <div className="bg-gray-800 p-4 rounded-lg">
-      <h2 className="text-xl font-bold text-white mb-4">Done</h2>
-      <div className="space-y-4">
-        {projects
-          .filter((proj) => proj.status === 'Done')
-          .map((proj) => (
-            <div
-              key={proj._id}
-              className="bg-gray-700 text-white rounded-lg shadow p-4"
-            >
-              <h3 className="text-lg font-semibold">{proj.title}</h3>
-              <p className="text-gray-300">{proj.description}</p>
-              <p className="text-sm text-gray-400">
-                Start: {new Date(proj.startDate).toLocaleDateString()}
-              </p>
-              <p className="text-sm text-gray-400">
-                Due: {new Date(proj.expirationDate).toLocaleDateString()}
-              </p>
-            </div>
-          ))}
- 
-{/* 
-          <div className="container mx-auto p-6">
-
-
-            <div className="flex flex-wrap">
-              {projects.map((proj) => (
-                <div
-                  key={proj._id}
-                  className="bg-white rounded-lg shadow-lg p-4 m-2 w-full md:w-1/3"
-                >
-                  <h3 className="text-xl font-bold">{proj.title}</h3>
-                  <p className="text-gray-600 mb-2">{proj.description}</p>
-                  <p className="text-gray-700">
-                    Start Date: {new Date(proj.startDate).toLocaleDateString()}
-                  </p>
-                  <p className="text-gray-700">
-                    Due Date:{' '}
-                    {new Date(proj.expirationDate).toLocaleDateString()}
-                  </p>
-
-                  <div className="mt-4">
-                    <h4 className="font-semibold">Tasks:</h4>
-                    {proj.tasks && proj.tasks.length > 0 ? (
-                      proj.tasks.map((task) => (
-                        <div
-                          key={task._id}
-                          className="border p-2 mb-2 rounded bg-gray-50"
-                        >
-                          <p className="font-bold">{task.title}</p>
-                          <p>{task.description}</p>
-                          <p>Status: {task.status}</p>
-                          <button
-                            onClick={() => handleDeleteTask(proj._id, task._id)}
-                            className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded"
+                    <div className="mt-4">
+                      <h4 className="font-semibold mb-2">Tasks:</h4>
+                      {proj.tasks && proj.tasks.length > 0 ? (
+                        proj.tasks.map((task) => (
+                          <div
+                            key={task._id}
+                            className="border p-3 mb-2 rounded bg-gray-50 shadow"
                           >
-                            Delete Task
-                          </button>
-                        </div>
-                      ))
-                    ) : (
-                      <p>No tasks available</p>
-                    )}
-                  </div>
+                            <p className="font-bold">{task.title}</p>
+                            <p>{task.description}</p>
+                            <p>Status: {task.status}</p>
+                            <button
+                              onClick={() =>
+                                handleDeleteTask(proj._id, task._id)
+                              }
+                              className="mt-2 bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded transition duration-300"
+                            >
+                              Delete Task
+                            </button>
+                          </div>
+                        ))
+                      ) : (
+                        <p>No tasks available</p>
+                      )}
+                    </div>
 
-                  <div className="flex justify-between mt-4">
-                    <button
-                      onClick={() => {
-                        setTaskDetails({ ...taskDetails, projectId: proj._id });
-                        setTaskModalOpen(true);
-                      }}
-                      className="bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded"
-                    >
-                      Add Task
-                    </button>
-                    <button
-                      onClick={() => handleDeleteProject(proj._id)}
-                      className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Modal for adding new project */}
-            {open && (
-              <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center">
-                <div className="bg-white rounded-lg p-6 shadow-lg w-11/12 md:w-1/3">
-                  <h2 className="text-xl font-semibold mb-4">
-                    Add New Project
-                  </h2>
-                  <form onSubmit={handleAddProject}>
-                    <div className="mb-4">
-                      <label className="block text-gray-700 mb-2">
-                        Project Name
-                      </label>
-                      <input
-                        type="text"
-                        className="border border-gray-300 rounded w-full p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        value={projectDetails.name}
-                        onChange={(e) =>
-                          setProjectDetails({
-                            ...projectDetails,
-                            name: e.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <label className="block text-gray-700 mb-2">
-                        Description
-                      </label>
-                      <textarea
-                        className="border border-gray-300 rounded w-full p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        value={projectDetails.description}
-                        onChange={(e) =>
-                          setProjectDetails({
-                            ...projectDetails,
-                            description: e.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <label className="block text-gray-700 mb-2">
-                        Start Date
-                      </label>
-                      <input
-                        type="date"
-                        className="border border-gray-300 rounded w-full p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        value={projectDetails.startDate}
-                        onChange={(e) =>
-                          setProjectDetails({
-                            ...projectDetails,
-                            startDate: e.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <label className="block text-gray-700 mb-2">
-                        Due Date
-                      </label>
-                      <input
-                        type="date"
-                        className="border border-gray-300 rounded w-full p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        value={projectDetails.expirationDate}
-                        onChange={(e) =>
-                          setProjectDetails({
-                            ...projectDetails,
-                            expirationDate: e.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </div>
-                    <div className="flex justify-end">
+                    <div className="flex justify-between mt-4">
                       <button
-                        type="submit"
-                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-200"
-                      >
-                        Add Project
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleClose}
-                        className="bg-gray-300 text-gray-700 px-4 py-2 rounded ml-2"
-                      >
-                        Close
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            )}
-
-            {/* Task Modal */}
-            {taskModalOpen && (
-              <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center">
-                <div className="bg-white rounded-lg p-6 shadow-lg w-11/12 md:w-1/3">
-                  <h2 className="text-xl font-semibold mb-4">Add New Task</h2>
-                  <form onSubmit={handleAddTask}>
-                    <div className="mb-4">
-                      <label className="block text-gray-700 mb-2">
-                        Task Title
-                      </label>
-                      <input
-                        type="text"
-                        className="border border-gray-300 rounded w-full p-2"
-                        value={taskDetails.title}
-                        onChange={(e) =>
+                        onClick={() => {
                           setTaskDetails({
                             ...taskDetails,
-                            title: e.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <label className="block text-gray-700 mb-2">
-                        Description
-                      </label>
-                      <textarea
-                        className="border border-gray-300 rounded w-full p-2"
-                        value={taskDetails.description}
-                        onChange={(e) =>
-                          setTaskDetails({
-                            ...taskDetails,
-                            description: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <label className="block text-gray-700 mb-2">Status</label>
-                      <select
-                        className="border border-gray-300 rounded w-full p-2"
-                        value={taskDetails.status}
-                        onChange={(e) =>
-                          setTaskDetails({
-                            ...taskDetails,
-                            status: e.target.value,
-                          })
-                        }
-                      >
-                        <option value="To Do">To Do</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="Done">Done</option>
-                      </select>
-                    </div>
-                    <div className="flex justify-end">
-                      <button
-                        type="submit"
-                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                            projectId: proj._id,
+                          });
+                          setTaskModalOpen(true);
+                        }}
+                        className="bg-green-600 hover:bg-green-700 text-white py-1 px-4 rounded transition duration-300"
                       >
                         Add Task
                       </button>
                       <button
-                        type="button"
-                        onClick={() => setTaskModalOpen(false)}
-                        className="bg-gray-300 text-gray-700 px-4 py-2 rounded ml-2"
+                        onClick={() => handleDeleteProject(proj._id)}
+                        className="bg-red-600 hover:bg-red-700 text-white py-1 px-4 rounded transition duration-300"
                       >
-                        Close
+                        Delete
                       </button>
                     </div>
-                  </form>
-                </div>
+                  </div>
+                ))}
               </div>
-            )}
+            </div>
           </div>
-        </div>
-      </div> 
-      </div>
-      </main>
+
+          {open && (
+            <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center">
+              <div className="bg-white rounded-lg p-6 shadow-lg w-11/12 md:w-1/3">
+                <h2 className="text-xl font-semibold mb-4">Add New Project</h2>
+                <form onSubmit={handleAddProject}>
+                  <div className="mb-4">
+                    <label className="block text-gray-700 mb-2">
+                      Project Name
+                    </label>
+                    <input
+                      type="text"
+                      className="border border-gray-300 rounded w-full p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      value={projectDetails.title}
+                      onChange={(e) =>
+                        setProjectDetails({
+                          ...projectDetails,
+                          title: e.target.value,
+                        })
+                      }
+                      required
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-gray-700 mb-2">
+                      Description
+                    </label>
+                    <textarea
+                      className="border border-gray-300 rounded w-full p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      value={projectDetails.description}
+                      onChange={(e) =>
+                        setProjectDetails({
+                          ...projectDetails,
+                          description: e.target.value,
+                        })
+                      }
+                      required
+                    />
+                  </div>
+                  <div className="projectStatus">
+                    <label className="block text-gray-700 mb-2">Status</label>
+                    <select
+                      className="border border-gray-300 rounded w-full p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      value={projectDetails.status}
+                      onChange={(e) =>
+                        setProjectDetails({
+                          ...projectDetails,
+                          status: e.target.value,
+                        })
+                      }
+                      required
+                    >
+                      <option value="active">Active</option>
+                      <option value="completed">Completed</option>
+                      <option value="in progress">In Progress</option>
+                    </select>
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-gray-700 mb-2">
+                      Start Date
+                    </label>
+                    <input
+                      type="date"
+                      className="border border-gray-300 rounded w-full p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      value={projectDetails.startDate}
+                      onChange={(e) =>
+                        setProjectDetails({
+                          ...projectDetails,
+                          startDate: e.target.value,
+                        })
+                      }
+                      required
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-gray-700 mb-2">Due Date</label>
+                    <input
+                      type="date"
+                      className="border border-gray-300 rounded w-full p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      value={projectDetails.expirationDate}
+                      onChange={(e) =>
+                        setProjectDetails({
+                          ...projectDetails,
+                          expirationDate: e.target.value,
+                        })
+                      }
+                      required
+                    />
+                  </div>
+                  <div className="flex justify-end">
+                    <button
+                      type="submit"
+                      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-200"
+                    >
+                      Add Project
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleClose}
+                      className="bg-gray-300 text-gray-700 px-4 py-2 rounded ml-2"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {taskModalOpen && (
+            <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center">
+              <div className="bg-white rounded-lg p-6 shadow-lg w-11/12 md:w-1/3">
+                <h2 className="text-xl font-semibold mb-4">Add New Task</h2>
+                <form onSubmit={handleAddTask}>
+                  <div className="mb-4">
+                    <label className="block text-gray-700 mb-2">
+                      Task Title
+                    </label>
+                    <input
+                      type="text"
+                      className="border border-gray-300 rounded w-full p-2"
+                      value={taskDetails.title}
+                      onChange={(e) =>
+                        setTaskDetails({
+                          ...taskDetails,
+                          title: e.target.value,
+                        })
+                      }
+                      required
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-gray-700 mb-2">
+                      Description
+                    </label>
+                    <textarea
+                      className="border border-gray-300 rounded w-full p-2"
+                      value={taskDetails.description}
+                      onChange={(e) =>
+                        setTaskDetails({
+                          ...taskDetails,
+                          description: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-gray-700 mb-2">Status</label>
+                    <select
+                      className="border border-gray-300 rounded w-full p-2"
+                      value={taskDetails.status}
+                      onChange={(e) =>
+                        setTaskDetails({
+                          ...taskDetails,
+                          status: e.target.value,
+                        })
+                      }
+                    >
+                      <option value="To Do">To Do</option>
+                      <option value="In Progress">In Progress</option>
+                      <option value="Done">Done</option>
+                    </select>
+                  </div>
+                  <div className="flex justify-end">
+                    <button
+                      type="submit"
+                      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                    >
+                      Add Task
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setTaskModalOpen(false)}
+                      className="bg-gray-300 text-gray-700 px-4 py-2 rounded ml-2"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+        </main>
       </div>
     </>
   );
-};
-
+}
 export default Project;

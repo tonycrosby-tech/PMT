@@ -7,7 +7,7 @@ const projectSchema = new Schema({
   ownerId: { type: Schema.Types.ObjectId, ref: 'User', required: false },
   status: {
     type: String,
-    enum: ['active', 'completed', 'archived'],
+    enum: ['active', 'completed', 'in progress', 'archived'],
     default: 'active',
   },
   dateCreated: { type: Date, default: Date.now },
